@@ -22,7 +22,9 @@ def fetch_financials(ticker, api_key):
 
     # Keep only relevant columns and add ticker
     financials_df = financials_df[["date","revenue","netIncome","eps"]].copy()
-    financials_df.rename(columns={"symbol": "ticker"}, inplace=True)
+    financials_df.rename(columns={"symbol": "ticker", "netIncome": "net_income", "eps": "eps"}, inplace=True)
+    
+    # Ensure ticker is set correctly
     financials_df["ticker"] = ticker
     print(f"Financial data fetched for {ticker}.")
     

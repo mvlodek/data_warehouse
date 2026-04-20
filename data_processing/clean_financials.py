@@ -8,18 +8,16 @@ def clean_financials(df, ticker):
         return None
 
     # Keep only what we need
-    df = df[["date","revenue","netIncome","eps"]].copy()
-
-    # Rename columns
-    df.columns = ["date","revenue","net_income","eps"]
+    df = df[["date","revenue","net_income","eps"]].copy()
 
     # Convert date
     df["date"] = pd.to_datetime(df["date"]).dt.date
 
-    # Add ticker
+    # Ensure ticker is set correctly
     df["ticker"] = ticker
 
     # Drop nulls
     df = df.dropna()
 
+    print(f"Cleaned {len(df)} financial records for {ticker}.")
     return df

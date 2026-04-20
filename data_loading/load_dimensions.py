@@ -24,3 +24,20 @@ def load_dimensions(data_df, engine):
     # Insert only new rows
     if not date_df.empty:
         date_df.to_sql("dim_date", engine, if_exists="append", index=False)
+        print(f"Inserted {len(date_df)} new dates into dim_date.")
+
+    # Get existing companies
+    if 'ticker' not in data_df.columns:
+        return
+    
+    existing_companies = pd.read_sql("SELECT ticker FROM dim_company", engine)
+
+    new_tickers = data_df['ticker'].drop_duplicates().copy()
+    new_tickers = new_tickers[~new_tickers.isin(existing_companies['ticker'])]
+
+    if not new_tickers.empty:
+        new_tickers.to_sql("dim_company", engine, if_exists="append", index=False)
+        print(f"Inserted {len(new_tickers)} new tickers into dim_company: {new_tickers.tolist()}")
+
+    else:
+        print("No new tickers to insert into dim_company.")
